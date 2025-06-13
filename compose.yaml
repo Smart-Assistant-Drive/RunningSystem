@@ -1,0 +1,100 @@
+services:
+  dmvgateway:
+    image: ghcr.io/smart-assistant-drive/dmvgateway:latest
+    ports:
+      - "8080:8080"
+    environment:
+      SERVER_PORT: 8080
+      SERVICE_URL: http://dmvservice:8083
+    depends_on:
+      dmvservice:
+        condition: service_started
+
+    networks:
+      mongo-net-1:
+
+  dmvservice:
+    image: ghcr.io/smart-assistant-drive/dmvservice:latest
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SERVER_PORT: 8083
+    depends_on:
+      mongodb1:
+        condition: service_healthy
+    networks:
+      mongo-net-1:
+      default:
+
+  mongodb1:
+    image: mongo:latest
+    container_name: mongodb1
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      ME_CONFIG_MONGODB_SERVER: mongodb
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      start_period: 15s
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    networks:
+      mongo-net-1:
+        aliases:
+          - mongodb
+
+  mongo-express1:
+    image: mongo-express:latest
+    container_name: mongo-express1
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://root:secret@mongodb:27017/
+    depends_on:
+      mongodb1:
+        condition: service_healthy
+    networks:
+      mongo-net-1:
+
+  # mongodb2:
+  #   image: mongo:latest
+  #   container_name: mongodb2
+  #   ports:
+  #     - "27018:27017"
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: example
+  #     ME_CONFIG_MONGODB_SERVER: mongodb
+  #   healthcheck:
+  #     test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+  #     start_period: 15s
+  #     interval: 5s
+  #     timeout: 10s
+  #     retries: 10
+  #   networks:
+  #     mongo-net-2:
+  #       aliases:
+  #         - mongodb
+
+  # mongo-express2:
+  #   image: mongo-express:latest
+  #   container_name: mongo-express2
+  #   ports:
+  #     - "8082:8082"
+  #   environment:
+  #     ME_CONFIG_MONGODB_URL: mongodb://root:example@mongodb:27017/
+  #     PORT: 8082
+  #   depends_on:
+  #     mongodb2:
+  #       condition: service_healthy
+  #   networks:
+  #     mongo-net-2:
+
+networks:
+  mongo-net-1:
+  mongo-net-2:
