@@ -1,18 +1,4 @@
 services:
-  dmvgateway:
-    image: ghcr.io/smart-assistant-drive/dmvgateway:latest
-    ports:
-      - "8080:8080"
-    environment:
-      SERVER_PORT: 8080
-      SERVICE_URL: http://dmvservice:8083
-    depends_on:
-      dmvservice:
-        condition: service_started
-
-    networks:
-      mongo-net-1:
-
   dmvservice:
     image: ghcr.io/smart-assistant-drive/dmvservice:latest
     ports:
@@ -27,6 +13,47 @@ services:
     networks:
       mongo-net-1:
       default:
+
+  dtenvironment:
+    image: ghcr.io/smart-assistant-drive/dtsemaphores:latest
+    ports:
+      - "1884:1883"
+      - "8070:8070"
+      - "8090:8090"
+      - "8080:8080"
+      - "8095-8110:8095-8110" # Expose a range of ports for the semaphore service
+    environment:
+      BASE_HOST: 0.0.0.0
+      BASE_PORT_SEMAPHORE: 8095
+      MQTT_BROKER_HOST: mosquittoMqtt
+      MQTT_BROKER_PORT: 1883
+    depends_on:
+      mosquittoMqtt:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8070/state/properties"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      mqtt-broker:
+
+  junctionMAS:
+    image: ghcr.io/smart-assistant-drive/semaphoremas:latest
+    ports:
+      - "8195-8210:8095-8110" # Expose a range of ports for the semaphore service
+    environment:
+      MQTT_HOST: mosquittoMqtt
+      MQTT_PORT: 1883
+      DT_HOST: dtenvironment
+      DT_BASE_PORT: 8095
+    depends_on:
+      mosquittoMqtt:
+        condition: service_healthy
+      dtenvironment:
+        condition: service_healthy
+    networks:
+      mqtt-broker:
 
   mongodb1:
     image: mongo:latest
@@ -60,6 +87,33 @@ services:
         condition: service_healthy
     networks:
       mongo-net-1:
+
+  mosquittoMqtt:
+    image: eclipse-mosquitto:latest # Use the latest stable version of Mosquitto
+    restart: unless-stopped # Always restart unless the container is explicitly stopped
+    ports:
+      - "1883:1883" # Standard MQTT port (unencrypted)
+      - "9001:9001" # WebSocket port (for MQTT over WebSockets)
+      # - "8883:8883" # Uncomment for MQTT over TLS/SSL (requires certificate configuration)
+    volumes:
+      # Mount a custom configuration file
+      # You need to create a 'mosquitto.conf' file in a 'config' directory next to this docker-compose.yml
+      - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+
+      # Persist data (messages, subscriptions, etc.)
+      # This ensures data survives container restarts
+      - mosquitto_data:/mosquitto/data
+
+      # Persist logs
+      - mosquitto_log:/mosquitto/log
+    command: mosquitto -c /mosquitto/config/mosquitto.conf # Tell Mosquitto to use our custom config
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-h", "localhost", "-p", "1883", "-t", "$$SYS/broker/uptime", "-C", "1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      mqtt-broker:
 
   # mongodb2:
   #   image: mongo:latest
@@ -98,3 +152,8 @@ services:
 networks:
   mongo-net-1:
   mongo-net-2:
+  mqtt-broker:
+
+volumes:
+  mosquitto_data: # Docker managed volume for Mosquitto data
+  mosquitto_log:  # Docker managed volume for Mosquitto logs
