@@ -7,6 +7,7 @@ services:
       SPRING_DATA_MONGODB_PORT: 27017
       SPRING_DATA_MONGODB_HOST: mongodb
       SERVER_PORT: 8083
+      SPRING_DATA_MONGODB_DATABASE: dmvdb
     depends_on:
       mongodb1:
         condition: service_healthy
@@ -14,7 +15,39 @@ services:
       mongo-net-1:
       default:
 
-  dtenvironment:
+  roadservice:
+    image: ghcr.io/smart-assistant-drive/roadservice:latest
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SERVER_PORT: 8084
+      SPRING_DATA_MONGODB_DATABASE: roaddb
+    depends_on:
+      mongodb1:
+        condition: service_healthy
+    networks:
+      mongo-net-1:
+      default:
+
+  trafficsignservice:
+    image: ghcr.io/smart-assistant-drive/traffic-sign-service:latest
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SERVER_PORT: 8085
+      SPRING_DATA_MONGODB_DATABASE: trafficsigndb
+    depends_on:
+      mongodb1:
+        condition: service_healthy
+    networks:
+      mongo-net-1:
+      default:
+
+  dtsemaphore:
     image: ghcr.io/smart-assistant-drive/dtsemaphores:latest
     ports:
       - "1884:1883"
@@ -45,12 +78,12 @@ services:
     environment:
       MQTT_HOST: mosquittoMqtt
       MQTT_PORT: 1883
-      DT_HOST: dtenvironment
+      DT_HOST: dtsemaphore
       DT_BASE_PORT: 8095
     depends_on:
       mosquittoMqtt:
         condition: service_healthy
-      dtenvironment:
+      dtsemaphore:
         condition: service_healthy
     networks:
       mqtt-broker:
