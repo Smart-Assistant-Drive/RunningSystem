@@ -49,20 +49,20 @@ async function runScenario() {
   await createFlow({
     roadId: "A1",
     direction: 0,
-    numOfLanes: 3,
+    numOfLanes: 1,
     coordinates: [
-      { first: -100, second: 0 },
-      { first: 0, second: 0 }
+      { first: 0, second: 1000 },
+      { first: 1000, second: 1000 }
     ]
   });
 
   await createFlow({
     roadId: "A1",
     direction: 1,
-    numOfLanes: 3,
+    numOfLanes: 1,
     coordinates: [
-      { first: 0, second: 0 },
-      { first: -100, second: 0 }
+      { first: 1000, second: 1000 },
+      { first: 0, second: 1000 }
     ]
   });
 
@@ -70,47 +70,47 @@ async function runScenario() {
   await createFlow({
     roadId: "B1",
     direction: 0,
-    numOfLanes: 2,
+    numOfLanes: 1,
     coordinates: [
-      { first: 0, second: -100 },
-      { first: 0, second: 0 }
+      { first: 500, second: 0 },
+      { first: 500, second: 1000 }
     ]
   });
 
   await createFlow({
     roadId: "B1",
     direction: 1,
-    numOfLanes: 2,
+    numOfLanes: 1,
     coordinates: [
-      { first: 0, second: 0 },
-      { first: 0, second: -100 }
+      { first: 500, second: 1000 },
+      { first: 500, second: 0 }
     ]
   });
 
   console.log("Creating speed limit signs...");
 
   await createSpeedLimitSign({
-    type: "SPEED_LIMIT",
-    category: "REGULATION",
+    type: "MaxSpeedLimitSign",
+    category: "REGULATORY_SIGN",
     idRoad: 1,
     direction: 0,
     latitude: 0,
-    longitude: -50,
+    longitude: 0,
     lanes: "ALL",
     speedLimit: 50,
-    unit: "km/h"
+    unit: "KMH"
   });
 
   await createSpeedLimitSign({
-    type: "SPEED_LIMIT",
-    category: "REGULATION",
+    type: "MaxSpeedLimitSign",
+    category: "REGULATORY_SIGN",
     idRoad: 2,
     direction: 0,
-    latitude: -50,
-    longitude: 0,
+    latitude: 0,
+    longitude: 1000,
     lanes: "ALL",
     speedLimit: 30,
-    unit: "km/h"
+    unit: "KMH"
   });
 
   console.log("✅ Scenario created successfully");
