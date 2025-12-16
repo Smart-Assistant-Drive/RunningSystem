@@ -1,4 +1,36 @@
 services:
+
+  admingateway:
+    image: ghcr.io/smart-assistant-drive/publicgateway:latest
+    ports:
+      - "8079:8079"
+    environment:
+      SERVER_PORT: 8079
+      SIGN_SERVICE_HOST: "http://trafficsignservice:8085"
+      ROAD_SERVICE_HOST: "http://roadservice:8084"
+    depends_on:
+      roadservice:
+        condition: service_started
+      trafficsignservice:
+        condition: service_started
+    networks:
+      default:
+
+  publicgateway:
+    image: ghcr.io/smart-assistant-drive/publicgateway:latest
+    ports:
+      - "8078:8078"
+    environment:
+      SERVER_PORT: 8078
+      SIGN_SERVICE_HOST: "http://trafficsignservice:8085"
+      ROAD_SERVICE_HOST: "http://roadservice:8084"
+    depends_on:
+      roadservice:
+        condition: service_started
+      trafficsignservice:
+        condition: service_started
+    networks:
+      default:
   dmvservice:
     image: ghcr.io/smart-assistant-drive/dmvservice:latest
     ports:
