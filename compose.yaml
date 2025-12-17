@@ -1,36 +1,43 @@
 services:
 
-  admingateway:
-    image: ghcr.io/smart-assistant-drive/publicgateway:latest
+  administrationgateway:
+    image: ghcr.io/smart-assistant-drive/administrationgateway:latest
     ports:
-      - "8079:8079"
+      - "8087:8087"
     environment:
-      SERVER_PORT: 8079
-      SIGN_SERVICE_HOST: "http://trafficsignservice:8085"
-      ROAD_SERVICE_HOST: "http://roadservice:8084"
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SERVER_PORT: 8087
+      SIGN_SERVICE_HOST: http://trafficsignservice:8085
+      ROAD_SERVICE_HOST: http://roadservice:8084
+      ACCESS_SERVICE_TRAFFICDT_HOST: http://trafficdt:8152
+      ACCESS_SERVICE_SEMAPHOREDT_HOST: http://dtsemaphore:8094
     depends_on:
-      roadservice:
-        condition: service_started
-      trafficsignservice:
-        condition: service_started
+      mongodb1:
+        condition: service_healthy
     networks:
+      mongo-net-1:
       default:
 
   publicgateway:
     image: ghcr.io/smart-assistant-drive/publicgateway:latest
     ports:
-      - "8078:8078"
+      - "8086:8086"
     environment:
-      SERVER_PORT: 8078
-      SIGN_SERVICE_HOST: "http://trafficsignservice:8085"
-      ROAD_SERVICE_HOST: "http://roadservice:8084"
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SERVER_PORT: 8086
+      SIGN_SERVICE_HOST: http://trafficsignservice:8085
+      ROAD_SERVICE_HOST: http://roadservice:8084
+      ACCESS_SERVICE_TRAFFICDT_HOST: http://trafficdt:8152
+      ACCESS_SERVICE_SEMAPHOREDT_HOST: http://dtsemaphore:8094
     depends_on:
-      roadservice:
-        condition: service_started
-      trafficsignservice:
-        condition: service_started
+      mongodb1:
+        condition: service_healthy
     networks:
+      mongo-net-1:
       default:
+
   dmvservice:
     image: ghcr.io/smart-assistant-drive/dmvservice:latest
     ports:
@@ -54,6 +61,7 @@ services:
     environment:
       SPRING_DATA_MONGODB_PORT: 27017
       SPRING_DATA_MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_USERNAME: root
       SERVER_PORT: 8084
       SPRING_DATA_MONGODB_DATABASE: roaddb
     depends_on:
@@ -91,32 +99,41 @@ services:
       BASE_HOST: 0.0.0.0
       BASE_PORT_SEMAPHORE: 8095
       MQTT_BROKER_HOST: mosquittoMqtt
+      AGGREGATE_DIGITAL_ADAPTER: 8094
       MQTT_BROKER_PORT: 1883
     depends_on:
       mosquittoMqtt:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8070/state/properties"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:8095/state/properties"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       mqtt-broker:
 
-  junctionMAS:
-    image: ghcr.io/smart-assistant-drive/semaphoremas:latest
+  trafficdt:
+    image: ghcr.io/smart-assistant-drive/trafficdt:latest
     ports:
-      - "8195-8210:8095-8110" # Expose a range of ports for the semaphore service
+      - "1885:1883" # mqtt port for traffic digital twins
+      - "8151:8151"
+      - "8152:8152"
+      - "8111-8150:8111-8150" # Expose a range of ports for all the traffic digital twins (http adapters)
     environment:
-      MQTT_HOST: mosquittoMqtt
-      MQTT_PORT: 1883
-      DT_HOST: dtsemaphore
-      DT_BASE_PORT: 8095
+      BASE_HOST: 0.0.0.0
+      BASE_PORT_SEMAPHORE: 8111
+      MQTT_BROKER_HOST: mosquittoMqtt
+      MQTT_BROKER_PORT: 1883
+      BASE_PORT_AGGREGATE: 8151
+      AGGREGATE_DIGITAL_ADAPTER: 8152
     depends_on:
       mosquittoMqtt:
         condition: service_healthy
-      dtsemaphore:
-        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8152/state/properties"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       mqtt-broker:
 
