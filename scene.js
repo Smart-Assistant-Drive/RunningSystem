@@ -1,5 +1,10 @@
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = "http://localhost:8087";
+const BASE_URL_SEMAPHORE = "http://localhost:8093";
 const headers = { "Content-Type": "application/json" };
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 async function createRoad(road) {
   const res = await fetch(`${BASE_URL}/road`, {
@@ -26,6 +31,98 @@ async function createSpeedLimitSign(sign) {
     body: JSON.stringify(sign)
   });
   return res.json();
+}
+
+async function createSemaphores() {
+  // CREATING SEMAPHORES
+  console.log("Creating semaphores...");
+  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      id:"junction1_0", // id semaphore
+      road:"A1",
+      direction:0,
+      position: { x:500, y:1000 },
+    })
+  });
+  await sleep(1000);
+  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      id:"junction1_1", // id semaphore
+      road:"A1",
+      direction:0,
+      position: { x:500, y:1000 },
+    })
+  });
+  await sleep(1000);
+  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      id:"junction1_2", // id semaphore
+      road:"A1",
+      direction:0,
+      position: { x:500, y:1000 },
+    })
+  });
+  await sleep(1000);
+  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      id:"junction1_3", // id semaphore
+      road:"A1",
+      direction:0,
+      position: { x:500, y:1000 },
+    })
+  });
+  await sleep(1000);
+  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      id:"junction2_0", // id semaphore
+      road:"A1",
+      direction:0,
+      position: { x:500, y:1000 },
+    })
+  });
+  await sleep(1000);
+  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      id:"junction2_1", // id semaphore
+      road:"A1",
+      direction:0,
+      position: { x:500, y:1000 },
+    })
+  });
+  await sleep(1000);
+  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      id:"junction2_2", // id semaphore
+      road:"A1",
+      direction:0,
+      position: { x:500, y:1000 },
+    })
+  });
+  await sleep(1000);
+  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      id:"junction2_3", // id semaphore
+      road:"A1",
+      direction:0,
+      position: { x:500, y:1000 },
+    })
+  });
 }
 
 async function runScenario() {
@@ -116,6 +213,15 @@ async function runScenario() {
   console.log("✅ Scenario created successfully");
 }
 
+async function createSemaphoresScenario() {
+  await createSemaphores();
+  console.log("✅ Semaphores created successfully");
+}
+
 runScenario().catch(err => {
   console.error("❌ Error creating scenario:", err);
+});
+
+createSemaphoresScenario().catch(err => {
+  console.error("❌ Error creating semaphores:", err);
 });

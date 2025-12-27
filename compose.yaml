@@ -94,11 +94,13 @@ services:
       - "8070:8070"
       - "8090:8090"
       - "8080:8080"
+      - "8093:8093"
       - "8095-8110:8095-8110" # Expose a range of ports for the semaphore service
     environment:
       BASE_HOST: 0.0.0.0
       BASE_PORT_SEMAPHORE: 8095
       MQTT_BROKER_HOST: mosquittoMqtt
+      BASE_PORT_AGGREGATE: 8093
       AGGREGATE_DIGITAL_ADAPTER: 8094
       MQTT_BROKER_PORT: 1883
     depends_on:
@@ -121,7 +123,7 @@ services:
       - "8111-8150:8111-8150" # Expose a range of ports for all the traffic digital twins (http adapters)
     environment:
       BASE_HOST: 0.0.0.0
-      BASE_PORT_SEMAPHORE: 8111
+      BASE_PORT_SEMAPHORE: 8111 # DA CAMBIARE
       MQTT_BROKER_HOST: mosquittoMqtt
       MQTT_BROKER_PORT: 1883
       BASE_PORT_AGGREGATE: 8151
