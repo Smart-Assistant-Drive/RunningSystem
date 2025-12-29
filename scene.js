@@ -156,7 +156,7 @@ async function runScenario() {
     roadId: "A1",
     direction: 0,
     numOfLanes: 1,
-    roadCoordinates: [
+    coordinates: [
       { x: 0, y: 1000 },
       { x: 500, y: 1000 },
       { x: 1000, y: 1000 }
@@ -167,7 +167,7 @@ async function runScenario() {
     roadId: "A1",
     direction: 1,
     numOfLanes: 1,
-    roadCoordinates: [
+    coordinates: [
       { x: 1000, y: 1000 },
       { x: 500, y: 1000 },
       { x: 0, y: 1000 }
@@ -179,7 +179,7 @@ async function runScenario() {
     roadId: "B1",
     direction: 0,
     numOfLanes: 1,
-    roadCoordinates: [
+    coordinates: [
       { x: 500, y: 0 },
       { x: 500, y: 500 },
       { x: 500, y: 1000 }
@@ -190,7 +190,7 @@ async function runScenario() {
     roadId: "B1",
     direction: 1,
     numOfLanes: 1,
-    roadCoordinates: [
+    coordinates: [
       { x: 500, y: 1000 },
       { x: 500, y: 250 },
       { x: 500, y: 0 }
