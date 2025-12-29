@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = "http://localhost:8087";
 const BASE_URL_SEMAPHORE = "http://localhost:8093";
 const headers = { "Content-Type": "application/json" };
 
@@ -158,6 +158,7 @@ async function runScenario() {
     numOfLanes: 1,
     roadCoordinates: [
       { x: 0, y: 1000 },
+      { x: 500, y: 1000 },
       { x: 1000, y: 1000 }
     ]
   });
@@ -168,6 +169,7 @@ async function runScenario() {
     numOfLanes: 1,
     roadCoordinates: [
       { x: 1000, y: 1000 },
+      { x: 500, y: 1000 },
       { x: 0, y: 1000 }
     ]
   });
@@ -179,6 +181,7 @@ async function runScenario() {
     numOfLanes: 1,
     roadCoordinates: [
       { x: 500, y: 0 },
+      { x: 500, y: 500 },
       { x: 500, y: 1000 }
     ]
   });
@@ -189,6 +192,7 @@ async function runScenario() {
     numOfLanes: 1,
     roadCoordinates: [
       { x: 500, y: 1000 },
+      { x: 500, y: 250 },
       { x: 500, y: 0 }
     ]
   });
@@ -223,7 +227,7 @@ async function runScenario() {
   await createSpeedLimitSign({
     type: "MaxSpeedLimitSign",
     category: "REGULATORY_SIGN",
-    idRoad: 1,
+    idRoad: "A1",
     direction: 0,
     latitude: 0,
     longitude: 0,
@@ -235,7 +239,7 @@ async function runScenario() {
   await createSpeedLimitSign({
     type: "MaxSpeedLimitSign",
     category: "REGULATORY_SIGN",
-    idRoad: 2,
+    idRoad: "B2",
     direction: 0,
     latitude: 0,
     longitude: 1000,
