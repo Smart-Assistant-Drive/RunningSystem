@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8087";
+const BASE_URL = "http://localhost:8080";
 const BASE_URL_SEMAPHORE = "http://localhost:8093";
 const headers = { "Content-Type": "application/json" };
 
@@ -11,6 +11,15 @@ async function createRoad(road) {
     method: "POST",
     headers,
     body: JSON.stringify(road)
+  });
+  return res.json();
+}
+
+async function createJunction(junction) {
+  const res = await fetch(`${BASE_URL}/junction`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(junction)
   });
   return res.json();
 }
@@ -147,9 +156,9 @@ async function runScenario() {
     roadId: "A1",
     direction: 0,
     numOfLanes: 1,
-    coordinates: [
-      { first: 0, second: 1000 },
-      { first: 1000, second: 1000 }
+    roadCoordinates: [
+      { x: 0, y: 1000 },
+      { x: 1000, y: 1000 }
     ]
   });
 
@@ -157,9 +166,9 @@ async function runScenario() {
     roadId: "A1",
     direction: 1,
     numOfLanes: 1,
-    coordinates: [
-      { first: 1000, second: 1000 },
-      { first: 0, second: 1000 }
+    roadCoordinates: [
+      { x: 1000, y: 1000 },
+      { x: 0, y: 1000 }
     ]
   });
 
@@ -168,9 +177,9 @@ async function runScenario() {
     roadId: "B1",
     direction: 0,
     numOfLanes: 1,
-    coordinates: [
-      { first: 500, second: 0 },
-      { first: 500, second: 1000 }
+    roadCoordinates: [
+      { x: 500, y: 0 },
+      { x: 500, y: 1000 }
     ]
   });
 
@@ -178,10 +187,35 @@ async function runScenario() {
     roadId: "B1",
     direction: 1,
     numOfLanes: 1,
-    coordinates: [
-      { first: 500, second: 1000 },
-      { first: 500, second: 0 }
+    roadCoordinates: [
+      { x: 500, y: 1000 },
+      { x: 500, y: 0 }
     ]
+  });
+
+  console.log("Creating junctions...");
+
+  await createJunction({
+    outgoingRoads: [
+      {
+        idRoad: "A1",
+        direction: 0
+      },
+      {
+        idRoad: "B1",
+        direction: 0
+      },
+      {
+        idRoad: "A1",
+        direction: 1
+      },
+      {
+        idRoad: "B1",
+        direction: 1
+      }
+    ],
+    junctionType: 0,
+    position: { x: 500.0, y: 100.0 }
   });
 
   console.log("Creating speed limit signs...");
@@ -221,7 +255,8 @@ async function createSemaphoresScenario() {
 runScenario().catch(err => {
   console.error("❌ Error creating scenario:", err);
 });
-
+/*
 createSemaphoresScenario().catch(err => {
   console.error("❌ Error creating semaphores:", err);
 });
+*/
