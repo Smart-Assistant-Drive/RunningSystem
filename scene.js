@@ -157,9 +157,9 @@ async function runScenario() {
     direction: 0,
     numOfLanes: 1,
     coordinates: [
-      { x: 0, y: 1000 },
-      { x: 500, y: 1000 },
-      { x: 1000, y: 1000 }
+      { x: 0, y: 980 },
+      { x: 500, y: 980 },
+      { x: 1000, y: 980 }
     ]
   });
 
@@ -168,9 +168,9 @@ async function runScenario() {
     direction: 1,
     numOfLanes: 1,
     coordinates: [
-      { x: 1000, y: 1000 },
-      { x: 500, y: 1000 },
-      { x: 0, y: 1000 }
+      { x: 1000, y: 1020 },
+      { x: 500, y: 1020 },
+      { x: 0, y: 1020 }
     ]
   });
 
@@ -180,9 +180,9 @@ async function runScenario() {
     direction: 0,
     numOfLanes: 1,
     coordinates: [
-      { x: 500, y: 0 },
-      { x: 500, y: 500 },
-      { x: 500, y: 1000 }
+      { x: 520, y: 0 },
+      { x: 520, y: 500 },
+      { x: 520, y: 1020 }
     ]
   });
 
@@ -191,9 +191,9 @@ async function runScenario() {
     direction: 1,
     numOfLanes: 1,
     coordinates: [
-      { x: 500, y: 1000 },
-      { x: 500, y: 250 },
-      { x: 500, y: 0 }
+      { x: 480, y: 1020 },
+      { x: 480, y: 250 },
+      { x: 480, y: 0 }
     ]
   });
 
@@ -229,8 +229,8 @@ async function runScenario() {
     category: "REGULATORY_SIGN",
     idRoad: "A1",
     direction: 0,
-    latitude: 0,
-    longitude: 0,
+    latitude: 1000,
+    longitude: 1000,
     lanes: "ALL",
     speedLimit: 50,
     unit: "KMH"
@@ -241,7 +241,7 @@ async function runScenario() {
     category: "REGULATORY_SIGN",
     idRoad: "B2",
     direction: 0,
-    latitude: 0,
+    latitude: 500,
     longitude: 1000,
     lanes: "ALL",
     speedLimit: 30,
