@@ -1,5 +1,4 @@
 const BASE_URL = "http://localhost:8087";
-const BASE_URL_SEMAPHORE = "http://localhost:8093";
 const headers = { "Content-Type": "application/json" };
 
 function sleep(ms) {
@@ -45,7 +44,7 @@ async function createSpeedLimitSign(sign) {
 async function createSemaphores() {
   // CREATING SEMAPHORES
   console.log("Creating semaphores...");
-  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+  await fetch(`${BASE_URL}/semaphores`, {
     method: "POST",
     headers,
     body: JSON.stringify({
@@ -56,7 +55,7 @@ async function createSemaphores() {
     })
   });
   await sleep(1000);
-  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+  await fetch(`${BASE_URL}/semaphores`, {
     method: "POST",
     headers,
     body: JSON.stringify({
@@ -67,7 +66,7 @@ async function createSemaphores() {
     })
   });
   await sleep(1000);
-  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+  await fetch(`${BASE_URL}/semaphores`, {
     method: "POST",
     headers,
     body: JSON.stringify({
@@ -78,7 +77,7 @@ async function createSemaphores() {
     })
   });
   await sleep(1000);
-  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+  await fetch(`${BASE_URL}/semaphores`, {
     method: "POST",
     headers,
     body: JSON.stringify({
@@ -89,7 +88,7 @@ async function createSemaphores() {
     })
   });
   await sleep(1000);
-  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+  await fetch(`${BASE_URL}/semaphores`, {
     method: "POST",
     headers,
     body: JSON.stringify({
@@ -100,7 +99,7 @@ async function createSemaphores() {
     })
   });
   await sleep(1000);
-  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+  await fetch(`${BASE_URL}/semaphores`, {
     method: "POST",
     headers,
     body: JSON.stringify({
@@ -111,7 +110,7 @@ async function createSemaphores() {
     })
   });
   await sleep(1000);
-  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+  await fetch(`${BASE_URL}/semaphores`, {
     method: "POST",
     headers,
     body: JSON.stringify({
@@ -122,7 +121,7 @@ async function createSemaphores() {
     })
   });
   await sleep(1000);
-  await fetch(`${BASE_URL_SEMAPHORE}/state/actions/createSemaphore`, {
+  await fetch(`${BASE_URL}/semaphores`, {
     method: "POST",
     headers,
     body: JSON.stringify({
