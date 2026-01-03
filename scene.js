@@ -51,7 +51,7 @@ async function createSemaphores() {
       id:"junction1_0", // id semaphore
       road:"A1",
       direction:0,
-      position: { x:500, y:1000 },
+      position: { x:550, y:550 },
     })
   });
   await sleep(1000);
@@ -61,8 +61,8 @@ async function createSemaphores() {
     body: JSON.stringify({
       id:"junction1_1", // id semaphore
       road:"A1",
-      direction:0,
-      position: { x:500, y:1000 },
+      direction:1,
+      position: { x:450, y:450 },
     })
   });
   await sleep(1000);
@@ -71,9 +71,9 @@ async function createSemaphores() {
     headers,
     body: JSON.stringify({
       id:"junction1_2", // id semaphore
-      road:"A1",
+      road:"B1",
       direction:0,
-      position: { x:500, y:1000 },
+      position: { x:550, y:450 },
     })
   });
   await sleep(1000);
@@ -82,12 +82,12 @@ async function createSemaphores() {
     headers,
     body: JSON.stringify({
       id:"junction1_3", // id semaphore
-      road:"A1",
-      direction:0,
-      position: { x:500, y:1000 },
+      road:"B1",
+      direction:1,
+      position: { x:450, y:550 },
     })
   });
-  await sleep(1000);
+  /*await sleep(1000);
   await fetch(`${BASE_URL}/semaphores`, {
     method: "POST",
     headers,
@@ -130,7 +130,7 @@ async function createSemaphores() {
       direction:0,
       position: { x:500, y:1000 },
     })
-  });
+  });*/
 }
 
 async function runScenario() {
@@ -156,9 +156,9 @@ async function runScenario() {
     direction: 0,
     numOfLanes: 1,
     coordinates: [
-      { x: 0, y: 980 },
-      { x: 500, y: 980 },
-      { x: 1000, y: 980 }
+      { x: 0, y: 480 },
+      { x: 500, y: 480 },
+      { x: 1000, y: 480 }
     ]
   });
 
@@ -167,9 +167,9 @@ async function runScenario() {
     direction: 1,
     numOfLanes: 1,
     coordinates: [
-      { x: 1000, y: 1020 },
-      { x: 500, y: 1020 },
-      { x: 0, y: 1020 }
+      { x: 1000, y: 520 },
+      { x: 500, y: 520 },
+      { x: 0, y: 520 }
     ]
   });
 
@@ -218,7 +218,7 @@ async function runScenario() {
       }
     ],
     junctionType: 0,
-    position: { x: 500.0, y: 100.0 }
+    position: { x: 500.0, y: 500.0 }
   });
 
   console.log("Creating speed limit signs...");
@@ -229,7 +229,7 @@ async function runScenario() {
     idRoad: "A1",
     direction: 0,
     latitude: 1000,
-    longitude: 1000,
+    longitude: 520,
     lanes: "ALL",
     speedLimit: 50,
     unit: "KMH"
@@ -238,12 +238,12 @@ async function runScenario() {
   await createSpeedLimitSign({
     type: "MaxSpeedLimitSign",
     category: "REGULATORY_SIGN",
-    idRoad: "B2",
+    idRoad: "B1",
     direction: 0,
-    latitude: 500,
+    latitude: 520,
     longitude: 1000,
     lanes: "ALL",
-    speedLimit: 30,
+    speedLimit: 50,
     unit: "KMH"
   });
 
@@ -258,8 +258,7 @@ async function createSemaphoresScenario() {
 runScenario().catch(err => {
   console.error("❌ Error creating scenario:", err);
 });
-/*
+
 createSemaphoresScenario().catch(err => {
   console.error("❌ Error creating semaphores:", err);
 });
-*/
