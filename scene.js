@@ -1,6 +1,27 @@
 const BASE_URL = "http://localhost:8087";
 const headers = { "Content-Type": "application/json" };
 
+const coordinates_A1_0 = [
+      { x: 0, y: 980 },
+      { x: 500, y: 980 },
+      { x: 1000, y: 980 }
+    ];
+const coordinates_A1_1 = [
+      { x: 1000, y: 1020 },
+      { x: 500, y: 1020 },
+      { x: 0, y: 1020 }
+    ];
+const coordinates_B1_0 = [
+      { x: 520, y: 0 },
+      { x: 520, y: 500 },
+      { x: 520, y: 1020 }
+    ];
+const coordinates_B1_1 = [
+      { x: 480, y: 1020 },
+      { x: 480, y: 250 },
+      { x: 480, y: 0 }
+    ];
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -133,6 +154,55 @@ async function createSemaphores() {
   });*/
 }
 
+async function createTrafficDigitalTwins() {
+  // CREATING TRAFFIC DTs
+  console.log("Creating traffic digital twins...");
+  await fetch(`${BASE_URL}/traffic`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      roadId:"A1",
+      direction:0,
+      numLanes: 1,
+      numBlocks: coordinates_A1_0.length,
+    })
+  });
+  await sleep(1000);
+  await fetch(`${BASE_URL}/traffic`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      roadId:"A1",
+      direction:1,
+      numLanes: 1,
+      numBlocks: coordinates_A1_1.length,
+    })
+  });
+  await sleep(1000);
+  await fetch(`${BASE_URL}/traffic`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      roadId:"B1",
+      direction:0,
+      numLanes: 1,
+      numBlocks: coordinates_B1_0.length,
+    })
+  });
+  await sleep(1000);
+  await fetch(`${BASE_URL}/traffic`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      roadId:"B1",
+      direction:1,
+      numLanes: 1,
+      numBlocks: coordinates_B1_1.length,
+    })
+  });
+  await sleep(1000);
+}
+
 async function runScenario() {
   console.log("Creating roads...");
 
@@ -155,22 +225,14 @@ async function runScenario() {
     roadId: "A1",
     direction: 0,
     numOfLanes: 1,
-    coordinates: [
-      { x: 0, y: 480 },
-      { x: 500, y: 480 },
-      { x: 1000, y: 480 }
-    ]
+    coordinates: coordinates_A1_0
   });
 
   await createFlow({
     roadId: "A1",
     direction: 1,
     numOfLanes: 1,
-    coordinates: [
-      { x: 1000, y: 520 },
-      { x: 500, y: 520 },
-      { x: 0, y: 520 }
-    ]
+    coordinates: coordinates_A1_1
   });
 
   // ROAD B
@@ -178,22 +240,14 @@ async function runScenario() {
     roadId: "B1",
     direction: 0,
     numOfLanes: 1,
-    coordinates: [
-      { x: 520, y: 0 },
-      { x: 520, y: 500 },
-      { x: 520, y: 1020 }
-    ]
+    coordinates: coordinates_B1_0
   });
 
   await createFlow({
     roadId: "B1",
     direction: 1,
     numOfLanes: 1,
-    coordinates: [
-      { x: 480, y: 1020 },
-      { x: 480, y: 250 },
-      { x: 480, y: 0 }
-    ]
+    coordinates: coordinates_B1_1
   });
 
   console.log("Creating junctions...");
@@ -255,10 +309,19 @@ async function createSemaphoresScenario() {
   console.log("✅ Semaphores created successfully");
 }
 
+async function createTrafficScenario() {
+  await createTrafficDigitalTwins();
+  console.log("✅ Semaphores created successfully");
+}
+
 runScenario().catch(err => {
   console.error("❌ Error creating scenario:", err);
 });
 
 createSemaphoresScenario().catch(err => {
   console.error("❌ Error creating semaphores:", err);
+});
+
+createTrafficScenario().catch(err => {
+  console.error("❌ Error creating traffic digital twins:", err);
 });
