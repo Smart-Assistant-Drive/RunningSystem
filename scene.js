@@ -1,4 +1,5 @@
 const BASE_URL = "http://localhost:8087";
+const PUBLIC_URL = "http://localhost:8008";
 const headers = { "Content-Type": "application/json" };
 
 const coordinates_A1_0 = [
@@ -21,6 +22,20 @@ const coordinates_B1_1 = [
       { x: 480, y: 250 },
       { x: 480, y: 0 }
     ];
+
+const paths = [
+  {
+    "id": "path-1",
+    "segments": [
+      {
+        "from": { "x": 12.34, "y": 56.78 },
+        "to":   { "x": 23.45, "y": 67.89 },
+        "roadId": "A1",
+        "direction": 0
+      }
+    ]
+  },
+];
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -58,6 +73,15 @@ async function createSpeedLimitSign(sign) {
     method: "POST",
     headers,
     body: JSON.stringify(sign)
+  });
+  return res.json();
+}
+
+async function createPath(path) {
+  const res = await fetch(`${PUBLIC_URL}/path`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(path)
   });
   return res.json();
 }
@@ -304,6 +328,13 @@ async function runScenario() {
   console.log("✅ Scenario created successfully");
 }
 
+async function createPaths() {
+  console.log("Creating paths...");
+  for (const path of paths) {
+    await createPath(path);
+  }
+}
+
 async function createSemaphoresScenario() {
   await createSemaphores();
   console.log("✅ Semaphores created successfully");
@@ -312,6 +343,11 @@ async function createSemaphoresScenario() {
 async function createTrafficScenario() {
   await createTrafficDigitalTwins();
   console.log("✅ Semaphores created successfully");
+}
+
+async function createPathsScenario() {
+  await createPaths();
+  console.log("✅ Paths created successfully");
 }
 
 runScenario().catch(err => {
@@ -324,4 +360,8 @@ createSemaphoresScenario().catch(err => {
 
 createTrafficScenario().catch(err => {
   console.error("❌ Error creating traffic digital twins:", err);
+});
+
+createPathsScenario().catch(err => {
+  console.error("❌ Error creating paths:", err);
 });
