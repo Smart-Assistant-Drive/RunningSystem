@@ -1,5 +1,5 @@
 const BASE_URL = "http://localhost:8087";
-const PUBLIC_URL = "http://localhost:8008";
+const PUBLIC_URL = "http://localhost:8086";
 const headers = { "Content-Type": "application/json" };
 
 const coordinates_A1_0 = [
@@ -28,8 +28,8 @@ const paths = [
     "id": "path-1",
     "segments": [
       {
-        "from": { "x": 12.34, "y": 56.78 },
-        "to":   { "x": 23.45, "y": 67.89 },
+        "from": { "x": 800, "y": 980 },
+        "to":   { "x": 200, "y": 980 },
         "roadId": "A1",
         "direction": 0
       }
