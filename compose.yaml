@@ -11,6 +11,7 @@ services:
       SIGN_SERVICE_HOST: http://trafficsignservice:8085
       ROAD_SERVICE_HOST: http://roadservice:8084
       ROAD_SERVICE_TRAFFICDT_HOST: http://trafficdt:8152
+      ROAD_SERVICE_TRAFFICDT_ADMINHOST: http://trafficdt:8151
       ROAD_SERVICE_SEMAPHOREDT_HOST: http://dtsemaphore:8094
       ROAD_SERVICE_SEMAPHOREDT_ADMINHOST: http://dtsemaphore:8093
     depends_on:
@@ -134,12 +135,13 @@ services:
       mosquittoMqtt:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8152/state/properties"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:8151/state/properties"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       mqtt-broker:
+      default:
 
   mongodb1:
     image: mongo:latest
