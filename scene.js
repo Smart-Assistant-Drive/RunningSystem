@@ -3,24 +3,24 @@ const PUBLIC_URL = "http://localhost:8086";
 const headers = { "Content-Type": "application/json" };
 
 const coordinates_A1_0 = [
-      { x: 0, y: 980 },
-      { x: 500, y: 980 },
-      { x: 1000, y: 980 }
+      { x: 0, y: 480 },
+      { x: 500, y: 480 },
+      { x: 1000, y: 480 }
     ];
 const coordinates_A1_1 = [
-      { x: 1000, y: 1020 },
-      { x: 500, y: 1020 },
-      { x: 0, y: 1020 }
+      { x: 1000, y: 520 },
+      { x: 500, y: 520 },
+      { x: 0, y: 520 }
     ];
 const coordinates_B1_0 = [
-      { x: 520, y: 0 },
-      { x: 520, y: 500 },
-      { x: 520, y: 1020 }
+      { x: 520, y: 1020 },
+      { x: 520, y: 250 },
+      { x: 520, y: 0 }
     ];
 const coordinates_B1_1 = [
-      { x: 480, y: 1020 },
-      { x: 480, y: 250 },
-      { x: 480, y: 0 }
+      { x: 480, y: 0 },
+      { x: 480, y: 500 },
+      { x: 480, y: 1020 }
     ];
 
 const paths = [
@@ -28,10 +28,10 @@ const paths = [
     "id": "path-1",
     "segments": [
       {
-        "from": { "x": 800, "y": 980 },
-        "to":   { "x": 200, "y": 980 },
+        "from": { "x": 800, "y": 520 },
+        "to":   { "x": 200, "y": 520 },
         "roadId": "A1",
-        "direction": 0
+        "direction": 1
       }
     ]
   },
@@ -96,7 +96,7 @@ async function createSemaphores() {
       id:"junction1_0", // id semaphore
       road:"A1",
       direction:0,
-      position: { x:550, y:550 },
+      position: { x:480, y:480 },
     })
   });
   await sleep(1000);
@@ -107,7 +107,7 @@ async function createSemaphores() {
       id:"junction1_1", // id semaphore
       road:"A1",
       direction:1,
-      position: { x:450, y:450 },
+      position: { x:520, y:520 },
     })
   });
   await sleep(1000);
@@ -118,7 +118,7 @@ async function createSemaphores() {
       id:"junction1_2", // id semaphore
       road:"B1",
       direction:0,
-      position: { x:550, y:450 },
+      position: { x:520, y:520 },
     })
   });
   await sleep(1000);
@@ -129,7 +129,7 @@ async function createSemaphores() {
       id:"junction1_3", // id semaphore
       road:"B1",
       direction:1,
-      position: { x:450, y:550 },
+      position: { x:480, y:480 },
     })
   });
   /*await sleep(1000);
@@ -306,6 +306,17 @@ async function runScenario() {
     category: "REGULATORY_SIGN",
     idRoad: "A1",
     direction: 0,
+    latitude: 0,
+    longitude: 480,
+    lanes: "ALL",
+    speedLimit: 50,
+    unit: "KMH"
+  });
+  await createSpeedLimitSign({
+    type: "MaxSpeedLimitSign",
+    category: "REGULATORY_SIGN",
+    idRoad: "A1",
+    direction: 1,
     latitude: 1000,
     longitude: 520,
     lanes: "ALL",
@@ -318,8 +329,20 @@ async function runScenario() {
     category: "REGULATORY_SIGN",
     idRoad: "B1",
     direction: 0,
-    latitude: 520,
+    latitude: 480,
     longitude: 1000,
+    lanes: "ALL",
+    speedLimit: 50,
+    unit: "KMH"
+  });
+
+  await createSpeedLimitSign({
+    type: "MaxSpeedLimitSign",
+    category: "REGULATORY_SIGN",
+    idRoad: "B1",
+    direction: 1,
+    latitude: 520,
+    longitude: 0,
     lanes: "ALL",
     speedLimit: 50,
     unit: "KMH"
@@ -342,13 +365,14 @@ async function createSemaphoresScenario() {
 
 async function createTrafficScenario() {
   await createTrafficDigitalTwins();
-  console.log("✅ Semaphores created successfully");
+  console.log("✅ TrafficDT created successfully");
 }
 
 async function createPathsScenario() {
   await createPaths();
   console.log("✅ Paths created successfully");
 }
+
 
 runScenario().catch(err => {
   console.error("❌ Error creating scenario:", err);
@@ -358,9 +382,11 @@ createSemaphoresScenario().catch(err => {
   console.error("❌ Error creating semaphores:", err);
 });
 
+
 createTrafficScenario().catch(err => {
   console.error("❌ Error creating traffic digital twins:", err);
 });
+
 
 createPathsScenario().catch(err => {
   console.error("❌ Error creating paths:", err);
