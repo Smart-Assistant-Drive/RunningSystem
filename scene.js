@@ -13,14 +13,14 @@ const coordinates_A1_1 = [
       { x: 0, y: 520 }
     ];
 const coordinates_B1_0 = [
-      { x: 520, y: 1020 },
-      { x: 520, y: 250 },
-      { x: 520, y: 0 }
+      { x: 480, y: 1000 },
+      { x: 480, y: 250 },
+      { x: 480, y: 0 }
     ];
 const coordinates_B1_1 = [
-      { x: 480, y: 0 },
-      { x: 480, y: 500 },
-      { x: 480, y: 1020 }
+      { x: 520, y: 0 },
+      { x: 520, y: 500 },
+      { x: 520, y: 1000 }
     ];
 
 const paths = [
@@ -31,6 +31,23 @@ const paths = [
         "from": { "x": 800, "y": 520 },
         "to":   { "x": 200, "y": 520 },
         "roadId": "A1",
+        "direction": 1
+      }
+    ]
+  },
+  {
+    "id": "path-2",
+    "segments": [
+      {
+        "from": { "x": 1000, "y": 520 },
+        "to":   { "x": 520, "y": 520 },
+        "roadId": "A1",
+        "direction": 1
+      },
+      {
+        "from": { "x": 520, "y": 520 },
+        "to":   { "x": 520, "y": 800 },
+        "roadId": "B1",
         "direction": 1
       }
     ]
@@ -118,7 +135,7 @@ async function createSemaphores() {
       id:"junction1_2", // id semaphore
       road:"B1",
       direction:0,
-      position: { x:520, y:450 },
+      position: { x:480, y:550 },
     })
   });
   await sleep(1000);
@@ -129,7 +146,7 @@ async function createSemaphores() {
       id:"junction1_3", // id semaphore
       road:"B1",
       direction:1,
-      position: { x:480, y:550 },
+      position: { x:520, y:450 },
     })
   });
   /*await sleep(1000);
@@ -329,8 +346,8 @@ async function runScenario() {
     category: "REGULATORY_SIGN",
     idRoad: "B1",
     direction: 0,
-    latitude: 480,
-    longitude: 1000,
+    latitude: 520,
+    longitude: 0,
     lanes: "ALL",
     speedLimit: 50,
     unit: "KMH"
@@ -341,8 +358,8 @@ async function runScenario() {
     category: "REGULATORY_SIGN",
     idRoad: "B1",
     direction: 1,
-    latitude: 520,
-    longitude: 0,
+    latitude: 480,
+    longitude: 1000,
     lanes: "ALL",
     speedLimit: 50,
     unit: "KMH"
@@ -381,11 +398,9 @@ createSemaphoresScenario().catch(err => {
   console.error("❌ Error creating semaphores:", err);
 });
 
-
 createTrafficScenario().catch(err => {
   console.error("❌ Error creating traffic digital twins:", err);
 });
-
 
 createPathsScenario().catch(err => {
   console.error("❌ Error creating paths:", err);
