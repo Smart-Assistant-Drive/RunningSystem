@@ -96,7 +96,7 @@ async function createSemaphores() {
       id:"junction1_0", // id semaphore
       road:"A1",
       direction:0,
-      position: { x:480, y:480 },
+      position: { x:450, y:480 },
     })
   });
   await sleep(1000);
@@ -107,7 +107,7 @@ async function createSemaphores() {
       id:"junction1_1", // id semaphore
       road:"A1",
       direction:1,
-      position: { x:520, y:520 },
+      position: { x:550, y:520 },
     })
   });
   await sleep(1000);
@@ -118,7 +118,7 @@ async function createSemaphores() {
       id:"junction1_2", // id semaphore
       road:"B1",
       direction:0,
-      position: { x:520, y:520 },
+      position: { x:520, y:450 },
     })
   });
   await sleep(1000);
@@ -129,7 +129,7 @@ async function createSemaphores() {
       id:"junction1_3", // id semaphore
       road:"B1",
       direction:1,
-      position: { x:480, y:480 },
+      position: { x:480, y:550 },
     })
   });
   /*await sleep(1000);
@@ -372,7 +372,6 @@ async function createPathsScenario() {
   await createPaths();
   console.log("✅ Paths created successfully");
 }
-
 
 runScenario().catch(err => {
   console.error("❌ Error creating scenario:", err);
